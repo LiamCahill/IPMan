@@ -1,6 +1,5 @@
 import discord
 import responses
-import os
 import bot_service
 
 
@@ -21,13 +20,13 @@ def run_discord_bot():
     @client.event
     async def on_ready():
         print(f'{client.user} is now running!')
+        print('Logged in as {0.user}'.format(client))
 
     @client.event
     async def on_message(message):
-
         if message.author == client.user:
             return
-        # while message.author != client.user:
+
         username = str(message.author)
         user_message = str(message.content)
         channel = str(message.channel)
