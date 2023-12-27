@@ -1,11 +1,63 @@
 import discord
 import responses
 import bot_service
-from discord import app_commands
 from discord.ext import commands
+import requests
+import bot_commands
 
 TOKEN = bot_service.get_local_attribute("DISCORD_TOKEN")
+APP_ID = bot_service.get_local_attribute("CLIENT_ID")
+GUILD_ID = bot_service.get_local_attribute("GUILD_ID")
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
+
+
+url = f'https://discord.com/api/v10/applications/{APP_ID}/guilds/{GUILD_ID}/commands'
+
+# This is an example CHAT_INPUT or Slash Command, with a type of 1
+json = {
+    "name": "uhoh",
+    "type": 1,
+    "description": "Send a random adorable animal photo",
+    "options": [
+        {
+            "name": "animal",
+            "description": "The type of animal",
+            "type": 3,
+            "required": True,
+            "choices": [
+                {
+                    "name": "Dog",
+                    "value": "animal_dog"
+                },
+                {
+                    "name": "Cat",
+                    "value": "animal_cat"
+                },
+                {
+                    "name": "Penguin",
+                    "value": "animal_penguin"
+                }
+            ]
+        },
+        {
+            "name": "only_smol",
+            "description": "Whether to show only baby animals",
+            "type": 5,
+            "required": False
+        }
+    ]
+}
+
+# For authorization, you can use either your bot token
+headers = {
+    "Authorization": f'Bot {TOKEN}'
+}
+
+r = requests.post(url, headers=headers, json=json)
+
+delete_url = f'https://discord.com/api/v10/applications/{APP_ID}/guilds/{GUILD_ID}/commands'
+d = requests.delete(delete_url)
+
 
 
 async def send_message(message, user_message, is_private):
