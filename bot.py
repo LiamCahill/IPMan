@@ -1,6 +1,11 @@
 import discord
 import responses
 import bot_service
+from discord import app_commands
+from discord.ext import commands
+
+TOKEN = bot_service.get_local_attribute("DISCORD_TOKEN")
+bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 
 
 async def send_message(message, user_message, is_private):
@@ -12,7 +17,6 @@ async def send_message(message, user_message, is_private):
 
 def run_discord_bot():
     bs = bot_service
-    TOKEN = bs.get_local_token()
     intents = discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents=intents)
@@ -21,6 +25,17 @@ def run_discord_bot():
     async def on_ready():
         print(f'{client.user} is now running!')
         print('Logged in as {0.user}'.format(client))
+
+    @bot.tree.command(name="hello")
+    async def hello(interaction: discord.Interaction):
+        await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command.")
+
+    @bot.tree.command(name="say")
+    @app_commands.describe(thing_to_say = "What should I say?")
+    async def say(interaction:discord.Interaction, thing_to_say: str):
+        await interaction.response.send_message(f'{interaction.user.name}" said: `{thing_to_say}`')
+
+
 
     @client.event
     async def on_message(message):
