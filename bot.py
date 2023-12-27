@@ -26,15 +26,6 @@ def run_discord_bot():
         print(f'{client.user} is now running!')
         print('Logged in as {0.user}'.format(client))
 
-    @bot.tree.command(name="hello")
-    async def hello(interaction: discord.Interaction):
-        await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command.")
-
-    @bot.tree.command(name="say")
-    @app_commands.describe(thing_to_say = "What should I say?")
-    async def say(interaction:discord.Interaction, thing_to_say: str):
-        await interaction.response.send_message(f'{interaction.user.name}" said: `{thing_to_say}`')
-
 
 
     @client.event
